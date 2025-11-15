@@ -85,7 +85,7 @@ sudo systemctl enable --now bluetooth.service || true
 # --------------------------------------------------------
 # 4A. Setup auto-login and start Hyprland
 # --------------------------------------------------------
-echo "[5/6] Setting up auto-login to Hyprland..."
+echo "[5/6] Setting up auto-login to Hyprland and Disabling GRUB menu..."
 USER_NAME=$(whoami)
 
 sudo mkdir -p /etc/systemd/system/getty@tty1.service.d/
@@ -98,6 +98,11 @@ EOF
 # Make sure Hyprland auto-starts on TTY login
 grep -qxF '[[ -z $DISPLAY ]] && exec Hyprland' ~/.bash_profile || \
     echo '[[ -z $DISPLAY ]] && exec Hyprland' >> ~/.bash_profile
+
+# 4B. Disable GRUB menu (auto-boot Arch)
+sudo sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub
+sudo sed -i 's/^GRUB_TIMEOUT_STYLE=.*/GRUB_TIMEOUT_STYLE=hidden/' /etc/default/grub
+sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 # --------------------------------------------------------
 # 6. Finish
