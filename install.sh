@@ -100,9 +100,14 @@ grep -qxF '[[ -z $DISPLAY ]] && exec Hyprland' ~/.bash_profile || \
     echo '[[ -z $DISPLAY ]] && exec Hyprland' >> ~/.bash_profile
 
 # 4B. Disable GRUB menu (auto-boot Arch)
-sudo sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub
-sudo sed -i 's/^GRUB_TIMEOUT_STYLE=.*/GRUB_TIMEOUT_STYLE=hidden/' /etc/default/grub
-sudo grub-mkconfig -o /boot/grub/grub.cfg
+if [ -f /etc/default/grub ]; then
+    sudo sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub
+    sudo sed -i 's/^GRUB_TIMEOUT_STYLE=.*/GRUB_TIMEOUT_STYLE=hidden/' /etc/default/grub
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+else
+    echo "[INFO] GRUB not found, skipping GRUB menu configuration"
+fi
+
 
 # --------------------------------------------------------
 # 6. Finish
