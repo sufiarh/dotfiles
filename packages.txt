@@ -29,9 +29,6 @@ grim
 hyprpicker
 xdg-desktop-portal-hyprland
 
-# Display Manager
-sddm
-
 # Browser
 firefox
 
@@ -39,3 +36,4 @@ firefox
 rsync
 brightnessctl
 fastfetch
+nano
