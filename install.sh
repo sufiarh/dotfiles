@@ -12,67 +12,54 @@ echo "[1/6] Updating system..."
 sudo pacman -Syu --noconfirm
 
 # --------------------------------------------------------
-# 2. Install pacman packages from packages.txt
+# 2. Install pacman packages
 # --------------------------------------------------------
-echo "[2/6] Installing packages..."
+echo "[2/6] Installing packages (pacman)..."
+
 if [ ! -f packages.txt ]; then
-    echo "ERROR: packages.txt tidak ditemukan!"
+    echo "ERROR: packages.txt not found!"
     exit 1
 fi
 
 sudo pacman -S --needed --noconfirm - < packages.txt
 
 # --------------------------------------------------------
-# 3. Install yay (AUR helper)
+# 3. Restore dotfiles (~/.config)
 # --------------------------------------------------------
-echo "[3/6] Installing yay (AUR helper)..."
-
-if ! command -v yay &>/dev/null; then
-    git clone https://aur.archlinux.org/yay.git /tmp/yay
-    cd /tmp/yay
-    makepkg -si --noconfirm
-    cd -
-else
-    echo "yay sudah terinstall."
-fi
-
-# --------------------------------------------------------
-# 4. Restore dotfiles (~/.config)
-# --------------------------------------------------------
-echo "[4/6] Restoring dotfiles to ~/.config ..."
+echo "[3/6] Restoring ~/.config..."
 
 mkdir -p ~/.config
 rsync -avh .config/ ~/.config/
 
 # --------------------------------------------------------
-# 5. Restore SDDM (themes + faces)
+# 4. Restore SDDM themes
 # --------------------------------------------------------
-echo "[5/6] Restoring SDDM theme & faces..."
+echo "[4/6] Restoring SDDM theme..."
 
-# Themes
 if [ -d sddm/themes ]; then
     sudo mkdir -p /usr/share/sddm/themes/
     sudo cp -r sddm/themes/* /usr/share/sddm/themes/
 fi
 
-# Faces (user profile images)
-if [ -d sddm/faces ]; then
-    sudo mkdir -p /usr/share/sddm/faces/
-    sudo cp -r sddm/faces/* /usr/share/sddm/faces/
-fi
+# set theme to chili
+echo "[Theme]
+Current=chili" | sudo tee /etc/sddm.conf.d/theme.conf
 
-# Enable SDDM
+# enable display manager
 sudo systemctl enable sddm.service
 
 # --------------------------------------------------------
-# 6. Enable core services
+# 5. Enable services
 # --------------------------------------------------------
-echo "[6/6] Enabling services..."
+echo "[5/6] Enabling core services..."
 
 sudo systemctl enable --now NetworkManager
 sudo systemctl enable --now bluetooth || true
 
+# --------------------------------------------------------
+# 6. Final
+# --------------------------------------------------------
 echo "================================="
-echo "  Instalasi Selesai!"
-echo "  Silakan reboot untuk melihat hasil."
+echo " Installation complete!"
+echo " Reboot to apply everything."
 echo "================================="
