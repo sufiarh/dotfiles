@@ -47,4 +47,71 @@ AUR_PKGS=$(echo "$PKGS"   | grep -E "$(echo $AUR_ONLY | sed 's/ /|/g')" || true)
 
 
 # --------------------------------------------------------
-# 2A. Prevent conflicts (fix wlog
+# 2A. Prevent conflicts (fix wlogout-git conflict)
+# --------------------------------------------------------
+if pacman -Q wlogout-git &>/dev/null; then
+    echo "⚠ Removing conflicting package: wlogout-git"
+    yay -R --noconfirm wlogout-git
+fi
+
+
+# --------------------------------------------------------
+# 2B. Install pacman packages
+# --------------------------------------------------------
+if [ -n "$PACMAN_PKGS" ]; then
+    echo "→ Installing official packages..."
+    sudo pacman -S --needed --noconfirm $PACMAN_PKGS
+fi
+
+
+# --------------------------------------------------------
+# 2C. Install aur packages
+# --------------------------------------------------------
+if [ -n "$AUR_PKGS" ]; then
+    echo "→ Installing AUR packages..."
+    yay -S --needed --noconfirm $AUR_PKGS
+fi
+
+
+# --------------------------------------------------------
+# 3. Restore ~/.config
+# --------------------------------------------------------
+echo "[3/6] Restoring ~/.config..."
+
+sudo pacman -S --needed --noconfirm rsync
+
+mkdir -p ~/.config
+rsync -avh .config/ ~/.config/
+
+
+# --------------------------------------------------------
+# 4. Install SDDM theme
+# --------------------------------------------------------
+echo "[4/6] Installing SDDM theme..."
+
+if [ -d sddm/themes ]; then
+    sudo mkdir -p /usr/share/sddm/themes/
+    sudo cp -r sddm/themes/* /usr/share/sddm/themes/
+fi
+
+echo "[Theme]
+Current=chili" | sudo tee /etc/sddm.conf.d/theme.conf
+
+sudo systemctl enable sddm.service
+
+
+# --------------------------------------------------------
+# 5. Enable services
+# --------------------------------------------------------
+echo "[5/6] Enabling services..."
+sudo systemctl enable --now NetworkManager
+sudo systemctl enable --now bluetooth || true
+
+
+# --------------------------------------------------------
+# 6. Finish
+# --------------------------------------------------------
+echo "================================="
+echo " Installation complete!"
+echo " Reboot to apply everything."
+echo "================================="
