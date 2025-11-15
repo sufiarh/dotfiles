@@ -85,24 +85,7 @@ rsync -avh .config/ ~/.config/
 
 
 # --------------------------------------------------------
-# 4. Install SDDM theme
-# --------------------------------------------------------
-echo "[4/6] Installing SDDM theme..."
-
-if [ -d sddm/themes ]; then
-    sudo mkdir -p /usr/share/sddm/themes/
-    sudo cp -r sddm/themes/* /usr/share/sddm/themes/
-fi
-
-sudo mkdir -p /etc/sddm.conf.d
-echo "[Theme]
-Current=chili" | sudo tee /etc/sddm.conf.d/theme.conf
-
-sudo systemctl enable sddm.service
-
-
-# --------------------------------------------------------
-# 5. Enable services
+# 4. Enable services
 # --------------------------------------------------------
 echo "[5/6] Enabling services..."
 sudo systemctl enable --now NetworkManager
@@ -110,7 +93,7 @@ sudo systemctl enable --now bluetooth.service || true
 
 
 # --------------------------------------------------------
-# 6. Finish
+# 5. Finish
 # --------------------------------------------------------
 echo "================================="
 echo " Installation complete!"
