@@ -21,10 +21,13 @@ if [ ! -f packages.txt ]; then
     exit 1
 fi
 
-# Clean comments + empty lines before installing
-PKGS=$(grep -v "^\s*#" packages.txt | grep -v "^\s*$")
-
+# bagian pacman
+PKGS=$(grep -v "^\s*#" packages.txt | grep -v "^\s*$" | grep -E "^(pipewire|firefox|...)$")
 sudo pacman -S --needed --noconfirm $PKGS
+
+# bagian AUR
+AUR_PKGS=$(grep -v "^\s*#" packages.txt | grep -v "^\s*$" | grep -E "^(wlogout|tofi)$")
+yay -S --needed --noconfirm $AUR_PKGS
 
 
 # --------------------------------------------------------
