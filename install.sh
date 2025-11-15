@@ -106,7 +106,7 @@ sudo systemctl enable sddm.service
 # --------------------------------------------------------
 echo "[5/6] Enabling services..."
 sudo systemctl enable --now NetworkManager
-sudo systemctl enable --now bluetooth || true
+sudo systemctl enable --now bluetooth.service || true
 
 
 # --------------------------------------------------------
