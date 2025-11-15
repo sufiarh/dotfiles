@@ -1,17 +1,3 @@
-# Core system
-base
-linux
-linux-firmware
-amd-ucode
-networkmanager
-git
-nano
-sudo
-efibootmgr
-grub
-bluez
-bluez-utils
-
 # Audio
 pipewire
 pipewire-alsa
@@ -20,12 +6,12 @@ wireplumber
 gst-plugin-pipewire
 pamixer
 
-# File Manager + GVFS
+# File Manager
 thunar
 gvfs
 gvfs-smb
 
-# Hyprland Environment
+# Hyprland
 hyprland
 hypridle
 hyprpaper
@@ -39,11 +25,9 @@ swww
 slurp
 grim
 hyprpicker
-
-# Wayland Portal
 xdg-desktop-portal-hyprland
 
-# Display Manager (SDDM + theme)
+# Display Manager
 sddm
 
 # Browser
@@ -51,4 +35,4 @@ firefox
 
 # Utils
 brightnessctl
-neofetch
+fastfetch
