@@ -37,18 +37,10 @@ fi
 PKGS=$(grep -v "^\s*#" packages.txt | grep -v "^\s*$")
 
 # Packages that are from AUR only
-AUR_ONLY="wlogout tofi"
+AUR_ONLY="tofi"
 
 PACMAN_PKGS=$(echo "$PKGS" | grep -v -E "$(echo $AUR_ONLY | sed 's/ /|/g')" || true)
 AUR_PKGS=$(echo "$PKGS"   | grep -E "$(echo $AUR_ONLY | sed 's/ /|/g')" || true)
-
-# --------------------------------------------------------
-# 2A. Prevent conflicts (fix wlogout-git conflict)
-# --------------------------------------------------------
-if pacman -Q wlogout-git &>/dev/null; then
-    echo "⚠ Removing conflicting package: wlogout-git"
-    yay -R --noconfirm wlogout-git
-fi
 
 # --------------------------------------------------------
 # 2B. Install pacman packages
@@ -107,7 +99,6 @@ if [ -d /boot/loader ]; then
 else
     echo "[INFO] systemd-boot not found, skipping bootloader auto-boot setup"
 fi
-
 
 # --------------------------------------------------------
 # 6. Finish
